@@ -1,0 +1,4 @@
+- Configuration options
+- Input from STDIN
+- Webpage with clojurescript
+- Derive options
