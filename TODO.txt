@@ -2,3 +2,5 @@
 - Input from STDIN
 - Webpage with clojurescript
 - Derive options
+- CLJ project
+- Scoring

@@ -22,9 +22,13 @@
   (if (not= 0 (- column 2))
     (with-meta '(pipe) { :line line, :column (- column 1)})))
 
-;; move birb down every other frame
-(defn bird [{:keys [line column]}]
+(defn bird
+  "move birb down every other frame"
+  [{:keys [line column]}]
   (with-meta '(bird) { :line (+ line (mod (:f @opts) 2)) , :column column}))
+
+(defn over [& args]
+  (with-meta '(over) { :line (/ (:h @opts) 2) , :column (/ (:w @opts) 2)}))
 
 (defn new-pipe [line column]
   (with-meta '(pipe) { :line line, :column (- column 5)}))
@@ -42,8 +46,8 @@
         (#(str % (spaces (- (:w @opts) (count %))))))))
 
 (defn render [entities]
-  (loop [header (str "(game " (next-opts) \newline)
-         rows (map render-row (rows entities))]
+  (let [header (str "(game " (next-opts) \newline)
+        rows (map render-row (rows entities))]
     (str header (clojure.string/join ",\n" rows) ")")))
 
 (defn move [entities]
@@ -69,6 +73,35 @@
       entities
       (apply concat (map-indexed (pipe-generator) (rows entities))))))
 
+(defn colliding? [x y]
+  (let [mx (meta x)
+        my (meta y)
+        xstart (:column mx)
+        ystart (:column my)
+        xend (+ xstart (count (str \' x)))
+        yend (+ ystart (count (str \' y)))]
+    ;;         xstart   ystart   xend   yend
+    ;; +----------|--------|-------|------|---------+
+    ;;         ystart   xstart   yend   xend
+    (and (= (:line mx) (:line my))
+         (= (< xstart yend) (> xend ystart)))))
+
+(defn collide [entities]
+  (let [bird (first (filter #(= '(bird) %) entities))
+        pred (fn [x] (and (not= x '(bird)) (colliding? bird x)))]
+    (if (some pred entities)
+      (list (over))
+      entities)))
+
+(defn over? [entities]
+  (some #(= '(over) %) entities))
+
 (defn game [arg-opts & args]
   (reset! opts arg-opts)
-  (->> args move generate-pipe render))
+  (if (over? args)
+    (render args)
+    (->> args move generate-pipe collide render)))
+
+(comment
+  (load-file "game.clj")
+  ,)
