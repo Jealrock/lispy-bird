@@ -1,0 +1,2 @@
+{:deps
+ {org.jline/jline-terminal {:mvn/version "3.29.0"}}}

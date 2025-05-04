@@ -15,7 +15,9 @@
 (defn eval-entity [x] (eval (reverse (conj x (meta x)))))
 
 (defn next-opts []
-  (update @opts :f inc))
+  (-> @opts
+    (update :f inc)
+    (dissoc :u)))
 
 ;; game functions
 (defn pipe [{:keys [line column]}]
@@ -25,7 +27,8 @@
 (defn bird
   "move birb down every other frame"
   [{:keys [line column]}]
-  (with-meta '(bird) { :line (+ line (mod (:f @opts) 2)) , :column column}))
+  (let [jump (- (get @opts :u 0))]
+    (with-meta '(bird) { :line (+ line jump (mod (:f @opts) 2)) , :column column})))
 
 (defn over [& args]
   (with-meta '(over) { :line (/ (:h @opts) 2) , :column (/ (:w @opts) 2)}))

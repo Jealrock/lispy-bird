@@ -10,3 +10,4 @@ The only thing required is a valid initial frame.
 
 # Running the game
 
+`clj -M runner.clj`
