@@ -1,4 +1,4 @@
-- Add GIF
+- Out of window handling
 - Babashka
 - Configuration options
 - Derive options

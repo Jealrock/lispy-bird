@@ -32,7 +32,7 @@
   (render-frame)
   (.start (Thread. process-input))
   (while true
-    (if (>= (- (System/currentTimeMillis) (:t @frame)) 500)
+    (if (>= (- (System/currentTimeMillis) (:t @frame)) 300)
       (render-frame))))
 
 (defn -main [& args]

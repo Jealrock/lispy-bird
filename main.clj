@@ -27,8 +27,9 @@
 (defn bird
   "move birb down every other frame"
   [{:keys [line column]}]
-  (let [jump (- (get @opts :u 0))]
-    (with-meta '(bird) { :line (+ line jump (mod (:f @opts) 2)) , :column column})))
+  (let [jump (- (get @opts :u 0))
+        diff (if (< jump 0) jump (mod (:f @opts) 2))]
+    (with-meta '(bird) { :line (+ line diff), :column column})))
 
 (defn over [& args]
   (with-meta '(over) { :line (/ (:h @opts) 2) , :column (/ (:w @opts) 2)}))
@@ -60,7 +61,7 @@
 
 ;; TODO: diff hole size
 (defn pipe-generator []
-  (let [hole-at (+ 2 (rand-int (- (:h @opts) 3)))
+  (let [hole-at (+ 2 (rand-int (- (:h @opts) 4)))
         hole-til (+ hole-at 4)
         hole-at? (fn [n] (and (< n hole-til) (>= n hole-at)))]
     (fn [idx row]

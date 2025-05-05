@@ -1,5 +1,7 @@
 # Terminal Flappy bird but it's HOMOICONIC™ 
 
+![footage](./footage.gif)
+
 This is a flappy bird game rendered through text, but with a twist: the
 TEXT IS THE ACTUAL CODE THAT GETS EVALUATED(powered by Clojure™)
 
